@@ -1,28 +1,476 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Criminology Research</title>
-    <style>
-        body { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; 
-            font-family: Arial; 
-            margin: 0; padding: 50px; 
-        }
-        .container { max-width: 900px; margin: auto; text-align: center; }
-        h1 { font-size: 4em; margin-bottom: 20px; }
-        .files { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; margin-top: 40px; }
-    </style>
+<meta charset="UTF-8">
+<title>Mock Test</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#f2f3f7}
+
+.header{
+position:fixed;
+top:0;
+left:0;
+width:98%;
+z-index:1000;
+background:#2c5f8a;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.topRight{text-align:right}
+
+
+
+.main{
+display:flex;
+padding:5px;
+margin-top:60px;   /* important */
+}
+
+
+.left{
+width:70%;
+background:white;
+padding:20px;
+border-radius:6px;
+}
+
+.right{
+width:30%;
+margin-left:15px;
+background:white;
+padding:15px;
+border-radius:6px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(40px,1fr));
+gap:6px;
+}
+
+.grid button{
+height:40px;
+border:none;
+background:#ddd;
+cursor:pointer;
+font-weight:bold;
+}
+
+.answered{background:#4caf50;color:white}
+
+.options label{
+display:block;
+margin:12px 0;
+padding:6px;
+cursor:pointer;
+border-radius:4px;
+}
+
+.correctOpt{background:#008000;color:white;} 
+.wrongOpt{background:#f44336;color:white}
+.notAttemptYellow{background:#ffeb3b;}
+
+.controls{margin-top:20px}
+
+button{padding:8px 12px;cursor:pointer}
+
+.resultBox{
+display:none;
+background:white;
+margin:80px 20px 20px 20px;
+padding:20px;
+border-radius:6px;
+}
+#question{
+white-space:pre-line;
+}
+
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🔍 Criminology Research Hub</h1>
-        <p style="font-size: 1.5em;">Welcome to Academic Research Files</p>
-        
-        <div class="files">
-            <h2>📚 Research Materials</h2>
-            <p>PDFs, Data, Reports - Coming Soon!</p>
-        </div>
-    </div>
+
+<div class="header">
+<div>
+<strong>Mock Test Portal</strong><br>
+Candidate: Riya😘
+</div>
+<div class="topRight">
+Total Marks: <span id="totalMarks"></span><br>
+Time Left: <span id="timer">00:00</span>
+</div>
+</div>
+
+<div class="main" id="examArea">
+
+<div class="left">
+<h3 id="question"></h3>
+<div id="options" class="options"></div>
+
+<div class="controls">
+<button onclick="saveNext()">Save & Next</button>
+</div>
+</div>
+
+<div class="right">
+<h4>Questions</h4>
+<div class="grid" id="palette"></div>
+<br>
+<button onclick="submitExam()">Submit Test</button>
+</div>
+
+</div>
+
+<div class="resultBox" id="resultBox"></div>
+
+<script>
+
+/* ========= QUESTIONS ========= */
+const examDurationMinutes = 60;
+
+const questions = [
+
+
+
+{"question":"Which of the following statements is NOT directly related to the Universal Declaration of Human Rights?","options":["Civil and political rights","Economic, social and cultural rights","Collective rights such as right to development","Rights exclusively related to victims of crime and abuse of power"],"answer":3},
+
+{"question":"The Directive Principles of State Policy talk about:\nA. Equal justice and free legal aid\nB. Maternity relief\nC. Composition of the Council of States\nD. Promotion of cooperative societies","options":["A, B and D only","A, B and C only","A, B, C and D","B, C and D only"],"answer":0},
+
+{"question":"Match LIST-I with LIST-II\nLIST-I (Branches of Forensic Science)\nA. Toxicology\nB. Ballistics\nC. Entomology\nD. Odontology\nLIST-II (Explanation)\nI. Study of insects\nII. Study of teeth and their identification\nIII. Study of poisonous substances\nIV. Examination of firearms and bullets","options":["A-III, B-IV, C-I, D-II","A-I, B-II, C-III, D-IV","A-II, B-I, C-IV, D-III","A-IV, B-III, C-I, D-II"],"answer":0},
+
+{"question":"Which ancient Indian text served as a source of crime control and punishment in early governance?","options":["Garuda Purana","Dharmashastra","Atharva Veda","Yajur Veda"],"answer":1},
+
+{"question":"In criminological literature, 'Recidivism' implies:","options":["A medical explanation of criminal behavior","The habit of relapsing into crime by offenders","False accusation of innocent individuals","Release of under-trial prisoners"],"answer":1},
+
+{"question":"Open prisons are based on the philosophy of:","options":["Incarceration","Revenge","Retribution","Reformation"],"answer":3},
+
+{"question":"Match LIST-I with LIST-II\nLIST-I (Crime Example)\nA. Embezzlement\nB. Human trafficking\nC. Murder\nD. Rioting\nLIST-II (Type)\nI. Crime against property\nII. Organized crime\nIII. Crime affecting public safety\nIV. Crime against person","options":["A-I, B-II, C-IV, D-III","A-II, B-I, C-IV, D-III","A-I, B-III, C-II, D-IV","A-IV, B-I, C-II, D-III"],"answer":0},
+
+{"question":"Under the Juvenile Justice Act, 2015 a key feature for children in conflict with law is:","options":["Mandatory imprisonment","Automatic transfer to adult prison","Permanent criminal record","Rehabilitation through individualized care plans"],"answer":3},
+
+{"question":"The most significant advantage of e-courts in India is:","options":["Complete elimination of human element","Enhanced accessibility and transparent case tracking","Mandatory replacement of judges","Only online hearings allowed"],"answer":1},
+
+{"question":"Arrange the United Nations Congresses on the Prevention of Crime from earliest to latest:\nA. Kyoto\nB. Stockholm\nC. London\nD. Milan","options":["A,B,C,D","C,B,D,A","B,A,D,C","C,B,A,D"],"answer":1},
+
+{"question":"Fundamental Duties in the Constitution of India primarily aim to:","options":["Impose legal restrictions","Limit government power","Create moral and ethical responsibilities for citizens","Act as prerequisite for citizenship"],"answer":2},
+
+{"question":"One of the unique features of Indian federalism is:","options":["Cooperative federalism with flexibility","Absolute state autonomy","No transparency","Complete central dominance"],"answer":0},
+
+{"question":"The Protection of Civil Rights Act mainly addresses:","options":["Economic inequality","Political representation","Untouchability and social discrimination","Educational reservations"],"answer":2},
+
+{"question":"Arrange the police ranks from lowest to highest:\nA. Deputy Superintendent of Police\nB. Constable\nC. Assistant Sub-Inspector\nD. Additional Superintendent of Police","options":["A,B,C,D","B,C,A,D","B,A,D,C","C,B,D,A"],"answer":1},
+
+{"question":"Which authority handles disputes under the Maintenance and Welfare of Parents and Senior Citizens Act, 2007?","options":["Senior citizen tribunals","High courts","Family courts","Lok Adalat"],"answer":0},
+
+{"question":"Which act relates to dowry prohibition in India?","options":["Dowry Prohibition Act 1961","Domestic Violence Act","Child Marriage Act","Hindu Marriage Act"],"answer":0},
+
+{"question":"Arrange the following scams from earliest to latest:\nA. Harshad Mehta scam\nB. Satyam scam\nC. PNB Nirav Modi scam\nD. Ketan Parekh scam","options":["A,D,B,C","A,B,D,C","D,A,B,C","A,C,B,D"],"answer":0},
+
+{"question":"Steganography refers to:","options":["Cyber stalking","Hiding information inside digital files","Email phishing","Network hacking"],"answer":1},
+
+{"question":"The duties of employers under the Sexual Harassment of Women at Workplace Act are described in:","options":["Chapter 4","Chapter 5","Chapter 6","Chapter 7"],"answer":0},
+
+{"question":"Who among the following judges was closely associated with Public Interest Litigation in India?","options":["Justice P.N. Bhagwati","Justice Hidayatullah","Justice B.N. Kirpal","Justice Ruma Pal"],"answer":0},
+
+{"question":"Which report examined the condition of women prisoners in India?","options":["NHRC report 2002","Justice Krishna Iyer Committee 1987","Mulla Committee 1983","Women in detention committee 2005"],"answer":3},
+
+{"question":"The Protection of Women from Domestic Violence Act, 2005 introduced:","options":["Only criminal prosecution","Financial penalties only","Right to residence and comprehensive relief","Public shaming of offenders"],"answer":2},
+
+
+
+
+{"question":"Who among the following is considered the founder of the Classical School of Criminology?","options":["Cesare Beccaria","Cesare Lombroso","Enrico Ferri","Edwin Sutherland"],"answer":0},
+
+{"question":"The concept of 'White Collar Crime' was introduced by:","options":["Robert Merton","Edwin Sutherland","Howard Becker","Travis Hirschi"],"answer":1},
+
+{"question":"According to Robert K. Merton, crime occurs due to a gap between:","options":["Biology and environment","Cultural goals and institutional means","Law and morality","Police and judiciary"],"answer":1},
+
+{"question":"Which criminologist proposed the theory of 'Differential Association'?","options":["Cesare Lombroso","Edwin Sutherland","Durkheim","Albert Cohen"],"answer":1},
+
+{"question":"Which theory explains crime through weak social bonds between individual and society?","options":["Strain theory","Control theory","Labeling theory","Routine activity theory"],"answer":1},
+
+{"question":"The term 'Anomie' was first used by:","options":["Robert Merton","Emile Durkheim","Howard Becker","Karl Marx"],"answer":1},
+
+{"question":"Which of the following theories emphasizes societal reaction to deviance?","options":["Labeling theory","Control theory","Strain theory","Biological theory"],"answer":0},
+
+{"question":"The Chicago School is associated with which concept in criminology?","options":["Urban ecology","Biological determinism","Psychological abnormality","Legal positivism"],"answer":0},
+
+{"question":"Routine Activity Theory was developed by:","options":["Cohen and Felson","Durkheim and Merton","Becker and Lemert","Hirschi and Nye"],"answer":0},
+
+{"question":"Which concept refers to the process by which prisoners adopt prison culture?","options":["Socialization","Prisonization","Enculturation","Institutionalization"],"answer":1},
+
+{"question":"The Positivist School of Criminology emphasizes:","options":["Free will","Scientific study of criminals","Religious beliefs","Legal punishment only"],"answer":1},
+
+{"question":"Cesare Lombroso is known for which theory?","options":["Biological theory of crime","Strain theory","Control theory","Labeling theory"],"answer":0},
+
+{"question":"Which of the following criminologists is associated with 'Subculture Theory'?","options":["Albert Cohen","Durkheim","Beccaria","Hirschi"],"answer":0},
+
+{"question":"Who developed the concept of 'Primary and Secondary Deviance'?","options":["Edwin Lemert","Howard Becker","Durkheim","Robert Merton"],"answer":0},
+
+{"question":"Which approach focuses on conflict between different social groups as cause of crime?","options":["Conflict theory","Routine theory","Control theory","Biological theory"],"answer":0},
+
+{"question":"Victimology is the scientific study of:","options":["Criminal behavior","Victims of crime","Police administration","Judicial system"],"answer":1},
+
+{"question":"Which punishment theory focuses on reforming offenders?","options":["Retribution","Deterrence","Rehabilitation","Capital punishment"],"answer":2},
+
+{"question":"Which crime is typically committed by individuals of high social status during their occupation?","options":["Street crime","White collar crime","Juvenile crime","Cyber crime"],"answer":1},
+
+{"question":"Green criminology studies:","options":["Environmental crimes","Corporate crimes","Cyber crimes","Organized crimes"],"answer":0},
+
+{"question":"Which criminological theory emphasizes opportunity and suitable targets for crime?","options":["Routine activity theory","Labeling theory","Control theory","Strain theory"],"answer":0},
+
+{"question":"Recidivism refers to:","options":["First time offending","Repeat offending","Victimization","Punishment"],"answer":1},
+
+{"question":"The concept of 'Broken Windows Theory' was proposed by:","options":["Wilson and Kelling","Durkheim and Merton","Becker and Lemert","Cohen and Felson"],"answer":0},
+
+{"question":"Which criminological approach focuses on environmental factors influencing crime?","options":["Ecological approach","Biological approach","Psychological approach","Legal approach"],"answer":0},
+
+{"question":"The study of punishment and prison systems is known as:","options":["Victimology","Penology","Sociology","Psychology"],"answer":1},
+
+
+
+{"question":"Which subject belongs to the concurrent list of the Indian Constitution?","options":["Education","Police","Army","Atomic energy"],"answer":0},
+
+{"question":"A hidden computer program triggered by time or condition is called:","options":["Email bomb","Logic bomb","Virus attack","Malware attack"],"answer":1},
+
+{"question":"Bonded Labour System (Abolition) Act, 1976 deals with:","options":["Child labour","Forced labour for debt","Industrial labour rights","Agricultural reforms"],"answer":1},
+
+{"question":"The Mulla Committee focused on reforms in:","options":["Police training","Juvenile justice","Prison administration","Women welfare"],"answer":2},
+
+{"question":"Which criminologists are considered proponents of the Positive School?\nA. Lombroso\nB. Garofalo\nC. Ferri\nD. Richard Quinney","options":["A,B,C","A,B","A,B,C,D","B,C,D"],"answer":0},
+
+{"question":"Helpline number initiated by Government of India for the elderly is:","options":["1098","13468","14567","45678"],"answer":2},
+
+{"question":"The process by which inmates adopt prison norms and culture is known as:","options":["Socialization","Prisonization","Enculturation","Institutionalization"],"answer":1},
+
+{"question":"Which case led to the establishment of the Basic Structure Doctrine?","options":["Minerva Mills vs Union of India","Golaknath vs State of Punjab","Maneka Gandhi vs Union of India","Kesavananda Bharati vs State of Kerala"],"answer":3},
+
+{"question":"Arrange the words in the order as they appear in the Preamble:\nA. Fraternity\nB. Equality\nC. Liberty\nD. Justice","options":["A,B,C,D","A,C,B,D","B,A,D,C","D,C,B,A"],"answer":1},
+
+{"question":"Which act was enacted first?\nA. National Food Security Act\nB. Mahatma Gandhi National Rural Employment Guarantee Act\nC. Family Courts Act\nD. Medical Termination of Pregnancy Act","options":["A,B,C,D","A,C,B,D","D,C,B,A","C,B,D,A"],"answer":3},
+
+{"question":"Phishing refers to:","options":["Tricking users to reveal confidential information","Cyber stalking","Website attack","Internet terrorism"],"answer":0},
+
+{"question":"Which of the following days is celebrated as International Human Rights Day?","options":["15 June","1 October","10 December","21 March"],"answer":2},
+
+{"question":"Which of the following crimes involves illegal trafficking of persons for exploitation?","options":["Cyber crime","Human trafficking","White collar crime","Corporate crime"],"answer":1},
+
+{"question":"The concept of prison reform in India was emphasized by which committee?","options":["Ribeiro committee","Padmanabha committee","Mulla committee","Malimath committee"],"answer":2},
+
+{"question":"Which theory is associated with Cesare Lombroso?","options":["Differential association theory","Biological theory of crime","Strain theory","Labeling theory"],"answer":1},
+
+{"question":"Differential association theory was developed by:","options":["Edwin Sutherland","Robert Merton","Durkheim","Becker"],"answer":0},
+
+{"question":"Which theory explains crime as result of strain between goals and means?","options":["Control theory","Strain theory","Routine activity theory","Conflict theory"],"answer":1},
+
+{"question":"Routine Activity Theory was proposed by:","options":["Cohen and Felson","Durkheim","Becker","Parsons"],"answer":0},
+
+{"question":"White collar crime concept was introduced by:","options":["Merton","Sutherland","Durkheim","Hirschi"],"answer":1},
+
+{"question":"Which act established Lok Adalat in India?","options":["Legal Services Authorities Act","Civil Procedure Code","Criminal Procedure Code","Evidence Act"],"answer":0},
+
+{"question":"Victimology is the study of:","options":["Criminal law","Victims of crime","Prison system","Police administration"],"answer":1},
+
+{"question":"Organized crime generally involves:","options":["Individual offenders","Structured criminal groups","Political leaders","Juveniles"],"answer":1},
+
+{"question":"Cyber stalking refers to:","options":["Online harassment and monitoring","Data encryption","Email fraud","Identity theft"],"answer":0},
+
+{"question":"Green criminology studies:","options":["Environmental crime","Cyber crime","Juvenile crime","Corporate crime"],"answer":0},
+
+{"question":"Restorative justice focuses on:","options":["Punishment","Repairing harm and reconciliation","Deterrence","Execution"],"answer":1},
+
+{"question":"Probation refers to:","options":["Release under supervision","Execution","Fine","Life imprisonment"],"answer":0},
+
+{"question":"Parole means:","options":["Conditional release from prison","Death penalty","Probation for juveniles","Fine"],"answer":0},
+
+{"question":"Juvenile delinquency refers to:","options":["Crime by minors","Crime by adults","Corporate crime","Political crime"],"answer":0},
+
+{"question":"Criminology mainly studies:","options":["Crime and criminals","Medical science","Engineering","Agriculture"],"answer":0}
+
+
+
+];
+
+/* ============================= */
+
+let current=0;
+let userAnswers=[];
+let time=examDurationMinutes*60;
+let timerInterval;
+document.getElementById("totalMarks").innerText = questions.length*4;
+
+function loadQuestion(){
+document.getElementById("question").innerText =
+"Q"+(current+1)+": "+questions[current].question;
+
+let html="";
+questions[current].options.forEach((opt,i)=>{
+html+=`
+<label>
+<input type="radio" name="opt" value="${i}" onclick="toggleOption(this)">
+${opt}
+</label>`;
+});
+document.getElementById("options").innerHTML=html;
+
+if(userAnswers[current]!=undefined){
+document.querySelectorAll("input[name=opt]")[userAnswers[current]].checked=true;
+}
+}
+
+function toggleOption(radio){
+if(radio.wasChecked){
+radio.checked=false;
+radio.wasChecked=false;
+}else{
+let radios=document.getElementsByName("opt");
+Array.from(radios).forEach(r=>r.wasChecked=false);radio.wasChecked=true;
+}
+}
+
+function saveNext(){
+let selected=document.querySelector("input[name=opt]:checked");
+
+if(selected){
+userAnswers[current]=parseInt(selected.value);
+document.getElementById("btn"+current).classList.add("answered");
+}
+
+if(current<questions.length-1){
+current++;
+loadQuestion();
+}else{
+submitExam();
+}
+}
+
+function buildPalette(){
+let html="";
+for(let i=0;i<questions.length;i++){
+html+=`<button id="btn${i}" onclick="go(${i})">${i+1}</button>`;
+}
+document.getElementById("palette").innerHTML=html;
+}
+
+function go(i){
+current=i;
+loadQuestion();
+}
+
+function startTimer(){
+timerInterval=setInterval(()=>{
+let m=Math.floor(time/60);
+let s=time%60;
+document.getElementById("timer").innerText=
+(m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+time--;
+if(time<0){
+clearInterval(timerInterval);
+submitExam();
+}
+},1000);
+}
+
+function submitExam(){
+clearInterval(timerInterval); 
+document.getElementById("examArea").style.display="none";
+document.getElementById("resultBox").style.display="block";
+
+let score=0;
+let correctCount=0;
+let wrongCount=0;
+let attemptedCount=0;
+let notAttemptedCount=0;
+let analysis="";
+
+questions.forEach((q,i)=>{
+
+let correct=q.answer;
+let user=userAnswers[i];
+let marks=0;
+
+if(user!==undefined){
+attemptedCount++;
+if(user==correct){
+marks=4;
+score+=4;
+correctCount++;
+}else{
+marks=-1;
+score-=1;
+wrongCount++;
+}
+}else{
+notAttemptedCount++;
+}
+
+analysis+=`<div>
+<h4>Q${i+1}: ${q.question}</h4>`;
+
+q.options.forEach((opt,index)=>{
+
+let className="";
+
+if(user !== undefined){  
+
+    if(user == correct){  
+        if(index == correct){
+            className="correctOpt";  
+        }
+    }else{
+        if(index == user){
+            className="wrongOpt";     
+        }
+        if(index == correct){
+            className="correctOpt";   
+        }
+    }
+
+}else{
+    if(index == correct){
+        className="notAttemptYellow";   
+    }
+}
+
+analysis+=`<div class="${className}" style="padding:6px;margin:4px 0;border-radius:4px;">
+${opt}
+</div>`;
+
+});
+
+let markStyle="";
+if(marks==4){ markStyle="color:green;font-weight:bold"; }
+if(marks==-1){ markStyle="color:red;font-weight:bold"; }
+
+analysis+=`Marks: <span style="${markStyle}">${marks>0?"+4":marks}</span><hr></div>`;
+
+});
+
+document.getElementById("resultBox").innerHTML=
+`
+<h2>Total Score: ${score} / ${questions.length*4}</h2>
+
+<p><strong>Total Questions:</strong> ${questions.length}</p>
+<p><strong>Attempted:</strong> ${attemptedCount}</p>
+<p><strong>Not Attempted:</strong> ${notAttemptedCount}</p>
+<p style="color:green;"><strong>Correct:</strong> ${correctCount}</p>
+<p style="color:red;"><strong>Wrong:</strong> ${wrongCount}</p>
+
+<button onclick="location.reload()">Retake Test</button>
+<h3>Detailed Analysis:</h3>
+${analysis}
+`;
+}
+
+loadQuestion();
+buildPalette();
+startTimer();
+
+</script>
+
 </body>
 </html>
